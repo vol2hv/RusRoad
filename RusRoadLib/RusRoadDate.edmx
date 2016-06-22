@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище RusRoadsModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CarOwner">
+          <Key>
+            <PropertyRef Name="CarOwner_Id" />
+          </Key>
+          <Property Name="CarOwner_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Govnumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Highway">
+          <Key>
+            <PropertyRef Name="Highway_Id" />
+          </Key>
+          <Property Name="Highway_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Speed" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Passage">
+          <Key>
+            <PropertyRef Name="Passage_Id" />
+          </Key>
+          <Property Name="Passage_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="CarOwner_Id" Type="int" Nullable="false" />
+          <Property Name="Highway_Id" Type="int" Nullable="false" />
+          <Property Name="Speed" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RusRoadCommon">
+          <Key>
+            <PropertyRef Name="RusRoadCommon_Id" />
+          </Key>
+          <Property Name="RusRoadCommon_Id" Type="int" Nullable="false" />
+          <Property Name="LastReport" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_Passage_CarOwner">
+          <End Role="CarOwner" Type="Self.CarOwner" Multiplicity="1" />
+          <End Role="Passage" Type="Self.Passage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CarOwner">
+              <PropertyRef Name="CarOwner_Id" />
+            </Principal>
+            <Dependent Role="Passage">
+              <PropertyRef Name="CarOwner_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Passage_Highway">
+          <End Role="Highway" Type="Self.Highway" Multiplicity="1" />
+          <End Role="Passage" Type="Self.Passage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Highway">
+              <PropertyRef Name="Highway_Id" />
+            </Principal>
+            <Dependent Role="Passage">
+              <PropertyRef Name="Highway_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище RusRoadsModelContainer">
+          <EntitySet Name="CarOwner" EntityType="Self.CarOwner" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Highway" EntityType="Self.Highway" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Passage" EntityType="Self.Passage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RusRoadCommon" EntityType="Self.RusRoadCommon" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Passage_CarOwner" Association="Self.FK_Passage_CarOwner">
+            <End Role="CarOwner" EntitySet="CarOwner" />
+            <End Role="Passage" EntitySet="Passage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Passage_Highway" Association="Self.FK_Passage_Highway">
+            <End Role="Highway" EntitySet="Highway" />
+            <End Role="Passage" EntitySet="Passage" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RusRoadsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CarOwner">
+          <Key>
+            <PropertyRef Name="CarOwner_Id" />
+          </Key>
+          <Property Name="CarOwner_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Govnumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Passage" Relationship="Self.FK_Passage_CarOwner" FromRole="CarOwner" ToRole="Passage" />
+        </EntityType>
+        <EntityType Name="Highway">
+          <Key>
+            <PropertyRef Name="Highway_Id" />
+          </Key>
+          <Property Name="Highway_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Speed" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Passage" Relationship="Self.FK_Passage_Highway" FromRole="Highway" ToRole="Passage" />
+        </EntityType>
+        <EntityType Name="Passage">
+          <Key>
+            <PropertyRef Name="Passage_Id" />
+          </Key>
+          <Property Name="Passage_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CarOwner_Id" Type="Int32" Nullable="false" />
+          <Property Name="Highway_Id" Type="Int32" Nullable="false" />
+          <Property Name="Speed" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CarOwner" Relationship="Self.FK_Passage_CarOwner" FromRole="Passage" ToRole="CarOwner" />
+          <NavigationProperty Name="Highway" Relationship="Self.FK_Passage_Highway" FromRole="Passage" ToRole="Highway" />
+        </EntityType>
+        <EntityType Name="RusRoadCommon">
+          <Key>
+            <PropertyRef Name="RusRoadCommon_Id" />
+          </Key>
+          <Property Name="RusRoadCommon_Id" Type="Int32" Nullable="false" />
+          <Property Name="LastReport" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_Passage_CarOwner">
+          <End Role="CarOwner" Type="Self.CarOwner" Multiplicity="1" />
+          <End Role="Passage" Type="Self.Passage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CarOwner">
+              <PropertyRef Name="CarOwner_Id" />
+            </Principal>
+            <Dependent Role="Passage">
+              <PropertyRef Name="CarOwner_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Passage_Highway">
+          <End Role="Highway" Type="Self.Highway" Multiplicity="1" />
+          <End Role="Passage" Type="Self.Passage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Highway">
+              <PropertyRef Name="Highway_Id" />
+            </Principal>
+            <Dependent Role="Passage">
+              <PropertyRef Name="Highway_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RusRoadsData" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CarOwner" EntityType="Self.CarOwner" />
+          <EntitySet Name="Highway" EntityType="Self.Highway" />
+          <EntitySet Name="Passage" EntityType="Self.Passage" />
+          <EntitySet Name="RusRoadCommon" EntityType="Self.RusRoadCommon" />
+          <AssociationSet Name="FK_Passage_CarOwner" Association="Self.FK_Passage_CarOwner">
+            <End Role="CarOwner" EntitySet="CarOwner" />
+            <End Role="Passage" EntitySet="Passage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Passage_Highway" Association="Self.FK_Passage_Highway">
+            <End Role="Highway" EntitySet="Highway" />
+            <End Role="Passage" EntitySet="Passage" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище RusRoadsModelContainer" CdmEntityContainer="RusRoadsData">
+          <EntitySetMapping Name="CarOwner">
+            <EntityTypeMapping TypeName="RusRoadsModel.CarOwner">
+              <MappingFragment StoreEntitySet="CarOwner">
+                <ScalarProperty Name="CarOwner_Id" ColumnName="CarOwner_Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Govnumber" ColumnName="Govnumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Highway">
+            <EntityTypeMapping TypeName="RusRoadsModel.Highway">
+              <MappingFragment StoreEntitySet="Highway">
+                <ScalarProperty Name="Highway_Id" ColumnName="Highway_Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Speed" ColumnName="Speed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Passage">
+            <EntityTypeMapping TypeName="RusRoadsModel.Passage">
+              <MappingFragment StoreEntitySet="Passage">
+                <ScalarProperty Name="Passage_Id" ColumnName="Passage_Id" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="CarOwner_Id" ColumnName="CarOwner_Id" />
+                <ScalarProperty Name="Highway_Id" ColumnName="Highway_Id" />
+                <ScalarProperty Name="Speed" ColumnName="Speed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RusRoadCommon">
+            <EntityTypeMapping TypeName="RusRoadsModel.RusRoadCommon">
+              <MappingFragment StoreEntitySet="RusRoadCommon">
+                <ScalarProperty Name="RusRoadCommon_Id" ColumnName="RusRoadCommon_Id" />
+                <ScalarProperty Name="LastReport" ColumnName="LastReport" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
