@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace RusRoadLib
 {
@@ -15,7 +16,7 @@ namespace RusRoadLib
         byte[] FileBuf = new byte[1]; // место для сбора всего получаемого файла
         int Lbuf;
         int Timeout = 5000; //Величина тайм-аута
-        RusRoadsData db = new RusRoadsData();
+        
         private enum fields : int { Govnumber = 0, Highway_Id, Time, Speed };
 
         // Конструктор
@@ -24,6 +25,7 @@ namespace RusRoadLib
             s = c.GetStream();
             Lbuf = c.ReceiveBufferSize;
             tcpClient = c;
+          
         }
         // Чтение данных
         public async Task ReadDataAsync(CancellationToken ct)
@@ -77,7 +79,16 @@ namespace RusRoadLib
                         string str = await text.ReadLineAsync();
                         if (str == null) { break; }
                         Console.WriteLine(str);
-                        await WritePassageAsync(str);
+                        try
+                        {
+                            await WritePassageAsync(str);
+                        }
+                        catch (Exception ex)
+                        {
+                            LogExt.Message(LogExt.ExeptionMes(ex),LogExt.MesLevel.Error);
+                           
+                        }
+                       
                     }
                 }
             }
@@ -88,50 +99,54 @@ namespace RusRoadLib
             string[] items = str.Split(new char[] { ',' });
             var p1 = new Passage();
             string w = items[(int)fields.Govnumber];
-            //var cars = from c in db.CarOwner
-            //           where c.Govnumber == w
-            //           select new { c.CarOwner_Id };
-            //if (cars.Count() > 0)
-            //{
-            //    p1.CarOwner_Id = cars.ToList()[0].CarOwner_Id;
-            //}
-            //else
-            //{
-            //    string mes = LogExt.ErrorMes(str, "Госномер " + w + " отсутствует в системе", null);
-            //    LogExt.Message(mes, LogExt.MesLevel.Error);
-            //    return;
-            //};
-            DateTime dt = new DateTime();
-            w = items[(int)fields.Time];
-            if (DateTime.TryParse(w, out dt))
+            using (RusRoadsData db = new RusRoadsData())
             {
-                p1.Time = dt;
-            }
-            else
-            {
-                string mes = LogExt.ErrorMes(str, "Не правильный формат даты " + w, null);
-                LogExt.Message(mes, LogExt.MesLevel.Error);
-                return;
-            }
-            p1.Highway_Id = int.Parse(items[(int)fields.Highway_Id]);
-            p1.Speed = int.Parse(items[(int)fields.Speed]);
-            var pps = db.Passage.Add(p1);
+                var cars = from c in db.CarOwner
+                           where c.Govnumber == w
+                           select new { c.CarOwner_Id };
+                if (cars.Count() > 0)
+                {
+                    p1.CarOwner_Id = cars.ToList()[0].CarOwner_Id;
+                }
+                else
+                {
+                    string mes = LogExt.ErrorMes(str, "Госномер " + w + " отсутствует в системе", null);
+                    LogExt.Message(mes, LogExt.MesLevel.Error);
+                    return;
+                };
+
+                DateTime dt = new DateTime();
+                w = items[(int)fields.Time];
+                if (DateTime.TryParse(w, out dt))
+                {
+                    p1.Time = dt;
+                }
+                else
+                {
+                    string mes = LogExt.ErrorMes(str, "Не правильный формат даты " + w, null);
+                    LogExt.Message(mes, LogExt.MesLevel.Error);
+                    return;
+                }
+                p1.Highway_Id = int.Parse(items[(int)fields.Highway_Id]);
+                p1.Speed = int.Parse(items[(int)fields.Speed]);
+                var pps = db.Passage.Add(p1);
 
 
-            try
-            {
+                try
+                {
 
-                await db.SaveChangesAsync();
+                    await db.SaveChangesAsync();
 
-            }
-            catch (Exception ex)
-            {
-                db.Passage.Local.Remove(pps);
-                string mes = LogExt.ErrorMes(str, "Другая ошибка ", ex);
-                LogExt.Message(mes, LogExt.MesLevel.Error);
-                
-                //Console.WriteLine("Сообщение : "+ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    db.Passage.Local.Remove(pps);
+                    string mes = LogExt.ErrorMes(str, "", ex);
+                    LogExt.Message(mes, LogExt.MesLevel.Error);
 
+                    //Console.WriteLine("Сообщение : "+ex.Message);
+
+                }
             }
         }
 

@@ -13,7 +13,7 @@ namespace SimpleLib
         int VG = 30000;
         Random rnd1 = new Random();
         int Myid = 0;
-        Boolean IsStop;
+        bool IsStop;
         HashSet<Task> ActiveTask = new HashSet<Task>();
 
         public void OnStartAsync()

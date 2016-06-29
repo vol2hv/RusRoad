@@ -23,13 +23,13 @@ namespace ReportService
 
         protected override void OnStart(string[] args)
         {
-            // TODO: Добавьте код для запуска службы.
+            
             reportEmu.OnStartAsync();
         }
 
         protected override void OnStop()
         {
-            // TODO: Добавьте код, выполняющий подготовку к остановке службы.
+            
             reportEmu.OnStopAsync();
         }
     }

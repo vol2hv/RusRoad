@@ -18,6 +18,7 @@ namespace _Test
         }
         static void Main(string[] args)
         {
+
             Console.WriteLine(System.Reflection.Assembly.GetEntryAssembly().Location);
             tmr.Change(10000, 5000);
             Console.WriteLine(DateTime.Now.ToString());

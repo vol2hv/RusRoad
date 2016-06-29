@@ -21,7 +21,9 @@ namespace RusRoadClient
             using (NetworkStream stream = client.GetStream())
             {
 
-                string path = @"e:\_CSharp\Project\ClientServerOKR\Счет.pdf";
+                //string path = @"e:\_CSharp\Project\ClientServerOKR\Счет.pdf";
+                string path = @"e:\_CSharp\Project\RusRoad\passage.txt";
+
                 var len = client.SendBufferSize;
                 byte[] buffer = new byte[len];
 
@@ -42,7 +44,7 @@ namespace RusRoadClient
                 }
                 
             }
-            Console.ReadLine();
+            //Console.ReadLine();
 
             if (client != null) client.Close();
         }

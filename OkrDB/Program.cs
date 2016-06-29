@@ -44,10 +44,10 @@ namespace _OkrDB
         static void Main(string[] args)
         {
 
-            //SyncTest.SingleAsync();
+            SyncTest.Single2Async();
             // Research();
             //RunAsync(); // из Main() c await вызов не возможен
-            Report();
+            //Report();
 
             Console.ReadLine();
 

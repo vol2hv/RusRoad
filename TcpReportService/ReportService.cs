@@ -29,7 +29,7 @@ namespace TcpReportService
 
         protected override void OnStop()
         {
-            // TODO: Добавьте код, выполняющий подготовку к остановке службы.
+           
             reportEmu.OnStopAsync();
         }
     }

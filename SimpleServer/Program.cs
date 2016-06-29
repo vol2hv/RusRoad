@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SimpleLib;
+using RusRoadLib;
 // тест2
 namespace SimpleServer
 {
@@ -20,12 +21,13 @@ namespace SimpleServer
             //tcpEmu.OnStartAsync();
 
             //tcpEmu.OnStopAsync();
+            
 
-            reportEmu = new ReportEmu1();
-            reportEmu.OnStartAsync();
+            //reportEmu = new ReportEmu1();
+            //reportEmu.OnStartAsync();
 
 
-            Stop();
+            //Stop();
 
 
             Console.ReadLine();

@@ -1,9 +1,5 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RusRoadLib
 {
@@ -43,12 +39,23 @@ namespace RusRoadLib
         // формирование сообщения об ошибке
         public static string ErrorMes(string pass, string cause, Exception ex)
         {
-            string s = "Проезд " + pass + " не записан в базу данных \n" + cause;
-            string s1 = ex == null ? "" : "Сообщение : " + ex.Message + "\n" +
-            "Внутреннее исключение: " + ex.InnerException.InnerException.Message + "\n" +
-            "Стек вызова: " + "\n" + ex.StackTrace;
-
-            return s + s1 + "\n";
+            string s1 = ex == null ? "" : ExeptionMes(ex);
+            return "Проезд " + pass + " не записан в базу данных \n" + cause+"\n" +s1+"\n";
+        }
+        // сообщение об исключении 
+        public static string ExeptionMes(Exception ex,string mes=null)
+        {
+            if (mes!=null) { mes += "\n"; };
+            string message = mes;
+            var ex1 = ex;
+            while (ex1!=null)
+            {
+                message = message+"Исключение : " +ex1.GetType().FullName + "\n";
+                message = message + "Сообщение : "+ex1.Message + "\n";
+                message = message + "Стек вызова : " + "\n" + ex1.StackTrace +"\n";
+                ex1 = ex1.InnerException;
+            }
+            return message+"========================================================";
         }
         // формирование текста уведомления 
         static string Notification(string fio, string rName, int speed, int mSpeed, DateTime dt)

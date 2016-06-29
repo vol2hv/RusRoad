@@ -45,6 +45,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,8 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CarOwner.cs" />
     <Compile Include="DataSensorHandler .cs" />
+    <Compile Include="Highway.cs" />
     <Compile Include="LogExt.cs" />
+    <Compile Include="Passage.cs" />
+    <Compile Include="RusRoadCommon.cs" />
+    <Compile Include="RusRoadsData.cs" />
     <Compile Include="RusRoadSettings.cs" />
     <Compile Include="RoadsReport.cs" />
     <Compile Include="RusRoad.cs" />
