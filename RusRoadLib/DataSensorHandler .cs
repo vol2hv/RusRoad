@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using RusRoadLib;
 
 namespace RusRoadLib
 {
@@ -15,7 +16,7 @@ namespace RusRoadLib
         TcpClient tcpClient;
         byte[] FileBuf = new byte[1]; // место для сбора всего получаемого файла
         int Lbuf;
-        int Timeout = 5000; //Величина тайм-аута
+        int Timeout = 30000; //Величина тайм-аута
         
         private enum fields : int { Govnumber = 0, Highway_Id, Time, Speed };
 

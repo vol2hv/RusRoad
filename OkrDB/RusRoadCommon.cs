@@ -14,6 +14,7 @@ namespace _OkrDB
         public int RusRoadCommon_Id { get; set; }
 
         public DateTime? LastReport { get; set; }
+
         public DateTime? Test { get; set; }
     }
 }

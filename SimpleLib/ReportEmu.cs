@@ -1,5 +1,6 @@
 ﻿/*
-схема довольно громоздкая. Предпочтительнее схема с Timer (ReportEmu1)
+схема с Task.Delay и прерывание создания отчета
+схема довольно громоздкая. Предпочтительнее схема с Timer (ReportEmu1)???
 */
 
 using System;
@@ -17,57 +18,76 @@ namespace SimpleLib
         static int TCreate = 15000;
         static int TWait = 10000;
         Boolean IsStop;
-        Task tsk1, tsk2;
-        CancellationTokenSource source = new CancellationTokenSource();
+        Task tsk;
+        CancellationTokenSource source;
 
         public async Task OnStartAsync()
         {
-            ReportMenAsync();
+            source = new CancellationTokenSource();
+            tsk =ReportMenAsync(source.Token);
         }
-        async Task ReportMenAsync() // менеджер подготовки отчетов
+        async Task ReportMenAsync(CancellationToken ct ) // менеджер подготовки отчетов
         {
+
             LogExt.Message("Сервис подготовки отчетов стартует.");
             while (!IsStop)
             {
+                ct.ThrowIfCancellationRequested();
                 LogExt.Message(String.Format("Начало обработки отчета запланировано через {0} мсек.", TWait));
-                tsk2 = null;
-                tsk1 = Task.Delay(TWait, source.Token); //эмуляция прихода запроса
-                await tsk1;
-                tsk1 = null;
-                tsk2 = CreateReportAsync();
-                await tsk2;
+                
+                Task tsk1=Task.Delay(TWait, ct); 
+                bool r = await CheckTask(tsk1, "<Ожидание времени начала формирования отчета>"); // ждем времени начала формирования отчета
+                if (!r) break;
 
+                ct.ThrowIfCancellationRequested();
+                r = await CheckTask(CreateReportAsync(ct), "<Создание отчета>"); // ждем времени начала формирования отчета
+                if (!r) break;
             }
-            LogExt.Message("Cоздание отчетов прекращено. Сервер создания отчетов получил сигнал на остановку");
+            LogExt.Message("Завершена работа менеджера создания отчетов");
         }
-        public async Task CreateReportAsync()
+        async Task CreateReportAsync(CancellationToken ct)
         {
             LogExt.Message(String.Format("Начато создание отчета продолжительностью {0} мсек.", TCreate));
-            await Task.Delay(TCreate);
+            await Task.Delay(TCreate,ct);
 
             LogExt.Message("Закончено создание отчета.");
         }
         public async Task OnStopAsync()
         {
-            LogExt.Message("Сервис подготовки отчетов останавливается.");
+            LogExt.Message("От операционной системы получен сигнал на останоку сервиса подготовки отчетов");
             IsStop = true;
+            source.Cancel();
+            LogExt.Message("Ждем окончания работы сервиса подготовки отчетов");
 
-            LogExt.Message("Выставлен IsStop.");
-            if (tsk1 != null)
-            {
-                source.Cancel();
-                LogExt.Message("снято задание на подготовку отчета");
-            }
-           
-            if (tsk2 != null)
-            {
-                source.Cancel();
-                LogExt.Message("Ждем окончания подготовки отчета");
-                await tsk2;
-                LogExt.Message("Завершено ожидание создания отчета.");
-            }
-            LogExt.Message("Сервер создания отчетов остановлен.");
+            bool r = await CheckTask(tsk, "<Менеджер подготовки отчетов>"); // ждем времени начала формирования отчета
+            LogExt.Message("Сервис подготовки отчетов остановлен");
+        }
 
+        async Task<bool> CheckTask(Task tsk, string tskName)
+        {
+            bool result=false;
+            string str;
+            try
+            {
+                await tsk;
+                result = true;
+            }
+            catch (OperationCanceledException)
+            {
+                LogExt.Message("Снята задача " + tskName);
+            }
+            catch (Exception ex)
+            {
+                str = LogExt.ExeptionMes(ex, "Задача " + tskName + "завершилась с ошибками.");
+                LogExt.Message(str,LogExt.MesLevel.Error);
+                
+            }
+            if (!result)
+            {
+                source.Dispose();
+                tsk.Dispose();
+            }
+            return result;
         }
 
     }

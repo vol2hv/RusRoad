@@ -8,30 +8,26 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 
 namespace RusRoadService
 {
     partial class RRTcpService : ServiceBase
     {
-        RusRoadSettings RRSetting = new RusRoadSettings();
         RusRoad RR = new RusRoad();
+       
         public RRTcpService()
         {
             InitializeComponent();
-
-            RRSetting.Settings();
-            
         }
 
         protected override void OnStart(string[] args)
         {
-            if (!RR.CheckingAccessDb())
+            if (RusRoadSettings.CheckingAccessDb())
             {
-                LogExt.Message("Тест соединения с базой данных не пройден. Сервис опроса датчиков не запущен.");
-                this.Stop();
+                RR.OnStartAsync();
             }
-            RR.OnStartAsync();
         }
 
         protected override void OnStop()

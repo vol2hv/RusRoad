@@ -1,6 +1,6 @@
-﻿namespace TcpReportService
+﻿namespace RusRoadService
 {
-    partial class ReportService
+    partial class RRReportService
     {
         /// <summary> 
         /// Обязательная переменная конструктора.
@@ -29,12 +29,9 @@
         private void InitializeComponent()
         {
             // 
-            // ReportService
+            // RRReportService
             // 
-            this.CanHandlePowerEvent = true;
-            this.CanHandleSessionChangeEvent = true;
-            this.CanShutdown = true;
-            this.ServiceName = "ReportService";
+            this.ServiceName = "RRReportService";
 
         }
 

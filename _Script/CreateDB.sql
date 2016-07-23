@@ -44,3 +44,13 @@ SET IDENTITY_INSERT [dbo].[Passage] ON
 INSERT INTO [dbo].[Passage] ([Passage_Id], [Time], [CarOwner_Id], [Highway_Id], [Speed]) VALUES (1, N'2014-01-01 00:00:00', 1, 1, 188)
 INSERT INTO [dbo].[Passage] ([Passage_Id], [Time], [CarOwner_Id], [Highway_Id], [Speed]) VALUES (2, N'2015-01-01 00:01:01', 1, 2, 199)
 SET IDENTITY_INSERT [dbo].[Passage] OFF
+
+CREATE TABLE [dbo].[RusRoadCommon] (
+    [RusRoadCommon_Id] INT      NOT NULL,
+    [LastReport]       DATETIME NULL,
+    [Test]             DATETIME NULL,
+    PRIMARY KEY CLUSTERED ([RusRoadCommon_Id] ASC)
+);
+
+INSERT INTO [dbo].[RusRoadCommon] ([RusRoadCommon_Id], [LastReport], [Test]) VALUES (1, N'2016-07-20 10:25:00', N'2016-07-20 10:23:00')
+

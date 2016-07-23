@@ -19,7 +19,7 @@ namespace RusRoadService
             
             ServicesToRun = new ServiceBase[]
             {
-                new RRTcpService()
+                new RRTcpService(),new RRReportService()
             };
             ServiceBase.Run(ServicesToRun);
         }

@@ -8,9 +8,11 @@ using System.Diagnostics;
 
 namespace RusRoadLib
 {
+    /*
+    Класс работы с датчиками
+    */
     public class RusRoad
     {
-      
         private int port = 8888;
         private string ipServer = "127.0.0.1";
 
@@ -32,10 +34,16 @@ namespace RusRoadLib
         // Старт прослущивания порта на сервере
         public async void OnStartAsync()
         {
- 
-            LogExt.Message("Служба сбора данных от датчиков запущена.");
-            // Старт прослущивания портов на сервере
-            ListeningSensorsAsync();
+            string dirReport, dirNotification;
+            RusRoadSettings.Settings(out dirReport, out dirNotification);
+            LogExt.Message("Запус сервиса опроса датчиков");
+
+            if (RusRoadSettings.CheckingAccessDb())
+            {
+                // Старт прослущивания портов на сервере
+                ListeningSensorsAsync();
+                LogExt.Message("Служба сбора данных от датчиков запущена.");
+            }
            
         }
         public async void ListeningSensorsAsync()
@@ -106,45 +114,7 @@ namespace RusRoadLib
 
         }
 
-        public bool CheckingAccessDb()
-        {
-            
-            bool result = true;
-            using (RusRoadsData db = new RusRoadsData())
-            {
-               
-                if (!db.Database.Exists())
-                {
-                    LogExt.Message("Базы данных указанной в строке подключения "+ 
-                        db.Database.Connection.ConnectionString+" не существует.\n", LogExt.MesLevel.Error);
-                    result = false;
-                    return result;
-                }
-               
-                try
-                {
-                    var com = db.RusRoadCommon.Find(1);
-                    if (com != null)
-                    {
-                        com.Test = DateTime.Now;
-                        db.SaveChanges();
-                    }
-                    else
-                    {
-                        LogExt.Message("Не удалось прочитать из базы данных сведения о системе.", LogExt.MesLevel.Error);
-                        result = false;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    LogExt.Message(LogExt.ExeptionMes(ex, "Ошибка доступа к базе данных."), LogExt.MesLevel.Error);
-                    result = false;
-                }
-
-            }
-            return result;
-        }
+       
 
 
     }

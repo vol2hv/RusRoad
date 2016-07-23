@@ -58,7 +58,7 @@ namespace RusRoadLib
             return message+"========================================================";
         }
         // формирование текста уведомления 
-        static string Notification(string fio, string rName, int speed, int mSpeed, DateTime dt)
+        public static string Notification(string fio, string rName, int speed, int mSpeed, DateTime dt)
         {
             string n = "\n";
             string str = "Уважаемый {0}!" + n;

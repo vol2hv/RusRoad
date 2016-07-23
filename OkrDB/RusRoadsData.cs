@@ -1,5 +1,4 @@
 namespace _OkrDB
-
 {
     using System;
     using System.Data.Entity;
@@ -32,4 +31,3 @@ namespace _OkrDB
         }
     }
 }
-

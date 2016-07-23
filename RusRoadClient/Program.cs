@@ -22,7 +22,7 @@ namespace RusRoadClient
             {
 
                 //string path = @"e:\_CSharp\Project\ClientServerOKR\Счет.pdf";
-                string path = @"e:\_CSharp\Project\RusRoad\passage.txt";
+                string path = @"..\..\..\passage.txt";
 
                 var len = client.SendBufferSize;
                 byte[] buffer = new byte[len];

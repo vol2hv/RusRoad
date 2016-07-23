@@ -4,37 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SimpleLib;
-using RusRoadLib;
+
 // тест2
 namespace SimpleServer
 {
     class Program
     {
-        static ReportEmu1 reportEmu;
+        static ReportEmu reportEmu;
         static void Main(string[] args)
         {
-            //LogExt Log1 = new LogExt();
-            //LogExt.Message("Информационное сообщение.", LogExt.MesLevel.Info);
-            //LogExt.Message("А это тоже информационное сообщение");
+
             //TcpEmu tcpEmu = new TcpEmu();
 
             //tcpEmu.OnStartAsync();
 
             //tcpEmu.OnStopAsync();
-            
 
-            //reportEmu = new ReportEmu1();
-            //reportEmu.OnStartAsync();
+            reportEmu = new ReportEmu();
+            reportEmu.OnStartAsync();
 
 
-            //Stop();
+            Stop();
 
 
             Console.ReadLine();
         }
         static async void Stop()
         {
-            await Task.Delay(28000);
+            await Task.Delay(7000);
             reportEmu.OnStopAsync();
         }
     }
