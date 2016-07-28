@@ -7,15 +7,18 @@ namespace RusRoadLib
 {
     public class RusRoadSettings
     {
-        public static void Settings(out string dirReport, out string dirNotification)
+        public static string DirRoot; //корневой каталог
+        public static string DirReport; //каталог отчетов
+        public static string DirNotification; //каталог уведомлений
+        public static string ConnString; //Строка подключения
+        public static void Settings()
         {
-           // Полный путь до ехе шника service 
-            string nFile = System.Reflection.Assembly.GetEntryAssembly().Location;
+            string nFile;
             // корневой каталог проекта в visual studio
-            string catalog = nFile.Substring(0, nFile.IndexOf("RusRoad") + 8);
+            DirRoot = GetRootDir();
 
             //каталог логов
-            var catalog1 = catalog + "_Log\\";
+            var catalog1 = DirRoot + "_Log\\";
             DirectoryInfo dirInfo = new DirectoryInfo(catalog1);
             if (!dirInfo.Exists) dirInfo.Create();
             nFile = catalog1 + "${shortdate}.log"; // файл лога
@@ -23,14 +26,16 @@ namespace RusRoadLib
             fileTarget.FileName = nFile; // прописываем файл лога в конфиг пакета Nlog
 
             // каталог уведомлений
-            dirNotification = catalog + "_Notification\\";
-           dirInfo = new DirectoryInfo(dirNotification);
+            DirNotification = DirRoot + "_Notification\\";
+           dirInfo = new DirectoryInfo(DirNotification);
             if (!dirInfo.Exists) dirInfo.Create();
 
             // каталог отчетов
-            dirReport = catalog + "_Report\\";
-            dirInfo = new DirectoryInfo(dirReport);
+            DirReport = DirRoot + "_Report\\";
+            dirInfo = new DirectoryInfo(DirReport);
             if (!dirInfo.Exists) dirInfo.Create();
+
+            ConnString = CreateConnectString();
         }
         // Проверка доступа к базе данных
         private static bool CheckingAccessDb1()
@@ -82,8 +87,30 @@ namespace RusRoadLib
                 LogExt.Message(LogExt.ExeptionMes(ex, "Ошибка доступа к базе данных."), LogExt.MesLevel.Error);
                
             }
+
             return isCheck;
            
+        }
+        public static string GetRootDir()
+        {
+            // Полный путь до ехе шника service 
+            string nFile = System.Reflection.Assembly.GetEntryAssembly().Location;
+            // корневой каталог проекта в visual studio
+            return nFile.Substring(0, nFile.IndexOf("RusRoad") + 8);
+        }
+        public static string CreateConnectString()
+        {
+            string result = "name=RusRoadsData";
+            FileInfo fileInfo = new FileInfo(GetRootDir()+ "RusRoads.mdf");
+           
+            if (fileInfo.Exists)
+            {
+                result = @"Data Source=(LocalDB)\MSSQLLocalDB;" +
+                         @"AttachDbFilename = E:\USERa\madv\Project\RusRoad\RusRoads.mdf;" +
+                         @"Integrated Security = True;";
+            }
+            //LogExt.Message(result);
+            return result;
         }
         public static DateTime ReadLastReport()
         {

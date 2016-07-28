@@ -79,6 +79,7 @@ namespace RusRoadLib
                     {
                         string str = await text.ReadLineAsync();
                         if (str == null) { break; }
+                        if (str.Substring(0, 1) == "#") { continue; }
                         Console.WriteLine(str);
                         try
                         {
@@ -115,7 +116,7 @@ namespace RusRoadLib
                     LogExt.Message(mes, LogExt.MesLevel.Error);
                     return;
                 };
-
+                
                 DateTime dt = new DateTime();
                 w = items[(int)fields.Time];
                 if (DateTime.TryParse(w, out dt))

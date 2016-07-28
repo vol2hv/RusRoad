@@ -26,12 +26,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		_Script\CreateDB.sql = _Script\CreateDB.sql
 		passage.txt = passage.txt
 		Readme.txt = Readme.txt
+		RusRoads.mdf = RusRoads.mdf
 		_Script\SQLQuery1.sql = _Script\SQLQuery1.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RusRoadService", "RusRoadService\RusRoadService.csproj", "{EDC979AC-2B5E-49C3-B174-7574CD778D3B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRReportServer", "RRReportServer\RRReportServer.csproj", "{B2ED4BF0-950F-42E6-A6D4-08FEBE6A9B34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Validator", "_Validator\_Validator.csproj", "{3F8309C8-29C8-4A46-9CA1-989DF14D96D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +86,10 @@ Global
 		{B2ED4BF0-950F-42E6-A6D4-08FEBE6A9B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2ED4BF0-950F-42E6-A6D4-08FEBE6A9B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2ED4BF0-950F-42E6-A6D4-08FEBE6A9B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F8309C8-29C8-4A46-9CA1-989DF14D96D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F8309C8-29C8-4A46-9CA1-989DF14D96D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F8309C8-29C8-4A46-9CA1-989DF14D96D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F8309C8-29C8-4A46-9CA1-989DF14D96D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

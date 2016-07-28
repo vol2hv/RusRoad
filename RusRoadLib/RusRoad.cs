@@ -34,8 +34,7 @@ namespace RusRoadLib
         // Старт прослущивания порта на сервере
         public async void OnStartAsync()
         {
-            string dirReport, dirNotification;
-            RusRoadSettings.Settings(out dirReport, out dirNotification);
+            RusRoadSettings.Settings();
             LogExt.Message("Запус сервиса опроса датчиков");
 
             if (RusRoadSettings.CheckingAccessDb())

@@ -1,4 +1,4 @@
-namespace RusRoadLib
+namespace _Validator
 {
     using System;
     using System.Data.Entity;
@@ -8,7 +8,7 @@ namespace RusRoadLib
     public partial class RusRoadsData : DbContext
     {
         public RusRoadsData()
-            : base(RusRoadSettings.ConnString)
+            : base("name=RusRoadsData")
         {
         }
 

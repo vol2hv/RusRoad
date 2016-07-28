@@ -23,8 +23,8 @@ namespace RusRoadLib
         {
             if (RusRoadSettings.CheckingAccessDb())
             {
-                string dirReport, dirNotification;
-                RusRoadSettings.Settings(out dirReport, out dirNotification);
+               
+                RusRoadSettings.Settings();
 
                 source = new CancellationTokenSource();
                 tsk = ReportMenAsync(source.Token);
@@ -109,10 +109,7 @@ namespace RusRoadLib
             //await Task.Delay(59000, ct);
             //LogExt.Message("Закончено создание отчета.");
             //========================================
-
-            string dirReport, dirNotification;
-            RusRoadSettings.Settings(out dirReport, out dirNotification);
-            string fReport = dirReport + "Report.csv";
+            string fReport = RusRoadSettings.DirReport + "Report.csv";
             using (RusRoadsData db = new RusRoadsData())
             {
                 var result = from passage in db.Passage
@@ -140,7 +137,7 @@ namespace RusRoadLib
                             var ss = String.Format("{0},{1},{2},{3},{4},{5}", r.fio, r.Govnumber, r.Name, r.maxSpeed, r.Time, r.Speed);
                             sw.WriteLine(ss);
                             // Формирование уведомлений
-                            var fNotif = dirNotification + r.fio.Trim().Replace(" ", "_") + ".txt";
+                            var fNotif = RusRoadSettings.DirNotification + r.fio.Trim().Replace(" ", "_") + ".txt";
 
                             using (StreamWriter sw1 = new StreamWriter(fNotif, true))
                             {
