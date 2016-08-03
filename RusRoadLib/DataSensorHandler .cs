@@ -98,7 +98,19 @@ namespace RusRoadLib
         // Формирование полей и запись в БД сущности Проезд
         private async Task WritePassageAsync(string str)
         {
+            // разбить строку и заполнить данные для проверки
             string[] items = str.Split(new char[] { ',' });
+            PassageSrc passageSrc = new PassageSrc();
+            passageSrc.Govnumber = items[(int)fields.Govnumber];
+            passageSrc.Highway_Id = items[(int)fields.Highway_Id];
+            passageSrc.Time = items[(int)fields.Time];
+            passageSrc.Speed = items[(int)fields.Speed];
+       
+
+            // проверка и логирование
+            // сформировать данные о проезде в формате базы данных
+            // запись в базу данных
+
             var p1 = new Passage();
             string w = items[(int)fields.Govnumber];
             using (RusRoadsData db = new RusRoadsData())

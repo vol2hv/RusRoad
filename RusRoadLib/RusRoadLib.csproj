@@ -38,6 +38,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentValidation, Version=6.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.6.4.0-beta3\lib\Net45\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.5\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -60,6 +64,8 @@
     <Compile Include="Highway.cs" />
     <Compile Include="LogExt.cs" />
     <Compile Include="Passage.cs" />
+    <Compile Include="PassageSrc.cs" />
+    <Compile Include="PassageSrcValidator.cs" />
     <Compile Include="RusRoadCommon.cs" />
     <Compile Include="RusRoadsData.cs" />
     <Compile Include="RusRoadSettings.cs" />
