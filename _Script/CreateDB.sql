@@ -26,6 +26,7 @@ INSERT INTO [dbo].[Highway] ([Highway_Id], [Name], [Speed]) VALUES (1, N'М1 Б�
 INSERT INTO [dbo].[Highway] ([Highway_Id], [Name], [Speed]) VALUES (2, N'М2  Крым', 90)
 INSERT INTO [dbo].[Highway] ([Highway_Id], [Name], [Speed]) VALUES (3, N'М3 Украина', 110)
 INSERT INTO [dbo].[Highway] ([Highway_Id], [Name], [Speed]) VALUES (4, N'М4 Дон', 120)
+INSERT INTO [dbo].[Highway] ([Highway_Id], [Name], [Speed]) VALUES (5, N'Х999 Большая дорога', 55)
 SET IDENTITY_INSERT [dbo].[Highway] OFF
 
 CREATE TABLE [dbo].[Passage] (

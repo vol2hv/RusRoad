@@ -11,6 +11,9 @@ namespace RusRoadLib
         public static string DirReport; //каталог отчетов
         public static string DirNotification; //каталог уведомлений
         public static string ConnString; //Строка подключения
+        // не хорошо использовать глобальные переменные
+        // но дважды вычислять из при проверке и заполнении еще хуже
+        public static int CarOwner_Id;      // ID владельца автотранспортного средства
         public static void Settings()
         {
             string nFile;

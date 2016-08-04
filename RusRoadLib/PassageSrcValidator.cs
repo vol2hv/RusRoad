@@ -14,21 +14,14 @@ namespace RusRoadLib
         public PassageSrcValidator()
         {
             //int n;
-            RuleFor(p => p.Govnumber).NotEmpty().Must(IsInDB);
-            RuleFor(p => p.Highway_Id).NotEmpty().Must(IsNumber).Must(IsInDBHighway);
-            
-            //RuleFor(p => p.Govnumber).NotEmpty().Must(IsInDB2);
-            //RuleFor(customer => customer.Forename).NotEmpty().WithMessage("Please specify a first name");
-            //RuleFor(customer => customer.Discount).NotEqual(0).When(customer => customer.HasDiscount);
-            //RuleFor(customer => customer.Address).Length(20, 250);
-            //RuleFor(customer => customer.Postcode).Must(BeAValidPostcode).WithMessage("Please specify a valid postcode");
+            RuleFor(p => p.Govnumber).NotEmpty().Must(IsInDB).WithMessage("Ошибка в поле Госномер");
+            RuleFor(p => p.Highway_Id).NotEmpty().Must(CheckHighway).WithMessage("Ошибка в поле идентификатор дороги");
+            RuleFor(p => p.Time).NotEmpty().Must(CheckTime).WithMessage("Ошибка в поле Время проезда");
+            RuleFor(p => p.Speed).NotEmpty().Must(CheckSpeed).WithMessage("Ошибка в поле Скорость проезда");
+
         }
 
-        private bool BeAValidPostcode(string postcode)
-        {
-            // custom postcode validating logic goes here
-            return true;
-        }
+
         private bool IsInDB(string govnum)
         {
             bool res = false;
@@ -40,31 +33,53 @@ namespace RusRoadLib
                 if (cars.Count() > 0)
                 {
                     res = true;
+                    // не хорошо использовать глобальные переменные
+                    // но дважды вычислять иx при проверке и заполнении еще хуже
+                    RusRoadSettings.CarOwner_Id = cars.ToList()[0].CarOwner_Id;
                 }
             }
             return res;
         }
-        private bool IsInDBHighway(string highway)
+        private bool CheckHighway(string highway)
         {
             bool res = false;
-            using (RusRoadsData db = new RusRoadsData())
+            int n;
+            if (int.TryParse(highway, out n))
             {
-                int n = int.Parse(highway);
-                var h = from c in db.Highway
-                           where c.Highway_Id == n
-                           select new {c.Highway_Id };
-                if (h.Count() > 0)
+                using (RusRoadsData db = new RusRoadsData())
                 {
-                    res = true;
+                    var h = from c in db.Highway
+                            where c.Highway_Id == n
+                            select new { c.Highway_Id };
+                    if (h.Count() > 0)
+                    {
+                        res = true;
+                        
+                    }
                 }
             }
             return res;
         }
-        private bool IsNumber(string field)
+        private bool CheckTime(string time)
         {
-            int n;
-            return int.TryParse(field, out n);
+            DateTime result = new DateTime();
+            return DateTime.TryParse(time, out result );
         }
+        private bool CheckSpeed(string speed)
+        {
+            bool res = false;
+            int n;
+            if (int.TryParse(speed, out n))
+            {
+                if (n>10 && n<350)
+                {
+                    res = true;
+
+                }
+            }
+            return res;
+        }
+
     }
 }
 

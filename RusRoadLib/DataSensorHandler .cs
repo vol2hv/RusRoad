@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using RusRoadLib;
+using FluentValidation.Results;
+using System.Collections.Generic;
 
 namespace RusRoadLib
 {
@@ -17,7 +19,9 @@ namespace RusRoadLib
         byte[] FileBuf = new byte[1]; // место для сбора всего получаемого файла
         int Lbuf;
         int Timeout = 30000; //Величина тайм-аута
-        
+        PassageSrc PassageSrc = new PassageSrc();
+        PassageSrcValidator Validator = new PassageSrcValidator();  // валидатор для проверки записи проезда
+
         private enum fields : int { Govnumber = 0, Highway_Id, Time, Speed };
 
         // Конструктор
@@ -99,53 +103,57 @@ namespace RusRoadLib
         private async Task WritePassageAsync(string str)
         {
             // разбить строку и заполнить данные для проверки
-            string[] items = str.Split(new char[] { ',' });
-            PassageSrc passageSrc = new PassageSrc();
-            passageSrc.Govnumber = items[(int)fields.Govnumber];
-            passageSrc.Highway_Id = items[(int)fields.Highway_Id];
-            passageSrc.Time = items[(int)fields.Time];
-            passageSrc.Speed = items[(int)fields.Speed];
-       
+            PreparationPassageSrc(str);
 
             // проверка и логирование
-            // сформировать данные о проезде в формате базы данных
-            // запись в базу данных
+            string allErrors= await CheckPassageAsync();
+            if (allErrors != null)
+            {
+                LogExt.Message( LogExt.ErrorMes(str, allErrors),LogExt.MesLevel.Error);
+                return;
+            }
 
+            // сформировать данные о проезде в формате базы данных, запись в базу данных
+            await WritePassageDBAsync(str);
+        }
+        async Task<string> CheckPassageAsync()
+        {
+
+            string allErrors = null;
+            ValidationResult results = await Validator.ValidateAsync(PassageSrc);
+            bool validationSucceeded = results.IsValid;
+
+            if (!validationSucceeded)
+            
+            {
+                IList<ValidationFailure> failures = results.Errors;
+                allErrors= LogExt.AllErrors(failures);
+            }
+            return allErrors;
+        }
+        // Разбиение строки записb о проезде
+        private void PreparationPassageSrc(string str)
+        {
+            string[] items = str.Split(new char[] { ',' });
+
+            PassageSrc.Govnumber = items[(int)fields.Govnumber];
+            PassageSrc.Highway_Id = items[(int)fields.Highway_Id];
+            PassageSrc.Time = items[(int)fields.Time];
+            PassageSrc.Speed = items[(int)fields.Speed];
+        }
+        // запись строки сущности Проезд в БД
+        private async Task WritePassageDBAsync(string str)
+        {
             var p1 = new Passage();
-            string w = items[(int)fields.Govnumber];
+            p1.Time = DateTime.Parse(PassageSrc.Time);
+            p1.CarOwner_Id = RusRoadSettings.CarOwner_Id;
+            p1.Highway_Id = int.Parse(PassageSrc.Highway_Id);
+            p1.Speed = int.Parse(PassageSrc.Speed);
+
+
             using (RusRoadsData db = new RusRoadsData())
             {
-                var cars = from c in db.CarOwner
-                           where c.Govnumber == w
-                           select new { c.CarOwner_Id };
-                if (cars.Count() > 0)
-                {
-                    p1.CarOwner_Id = cars.ToList()[0].CarOwner_Id;
-                }
-                else
-                {
-                    string mes = LogExt.ErrorMes(str, "Госномер " + w + " отсутствует в системе", null);
-                    LogExt.Message(mes, LogExt.MesLevel.Error);
-                    return;
-                };
-                
-                DateTime dt = new DateTime();
-                w = items[(int)fields.Time];
-                if (DateTime.TryParse(w, out dt))
-                {
-                    p1.Time = dt;
-                }
-                else
-                {
-                    string mes = LogExt.ErrorMes(str, "Не правильный формат даты " + w, null);
-                    LogExt.Message(mes, LogExt.MesLevel.Error);
-                    return;
-                }
-                p1.Highway_Id = int.Parse(items[(int)fields.Highway_Id]);
-                p1.Speed = int.Parse(items[(int)fields.Speed]);
                 var pps = db.Passage.Add(p1);
-
-
                 try
                 {
 

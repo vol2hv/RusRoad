@@ -15,7 +15,7 @@ namespace RusRoadServer
         {
             PassageSrc pas = new PassageSrc()
             {
-                Govnumber = "С666СС48", Highway_Id="25"
+                Govnumber = "С666СС48", Highway_Id="2", Time= "09.05.2016 3:30:19", Speed="330"
 
             };
 
@@ -30,18 +30,10 @@ namespace RusRoadServer
             else
             {
                 IList<ValidationFailure> failures = results.Errors;
-                Console.WriteLine(AllErrors(failures));
+                Console.WriteLine(LogExt.AllErrors(failures));
             }
             
         }
-        static string AllErrors(IList<ValidationFailure> failures)
-        {
-            string str = "Ошибки при валидации\n";
-            foreach (var item in failures)
-            {
-                str = str + item.ErrorMessage + "\n";
-            }
-            return str;
-        }
+        
     }
 }
