@@ -42,23 +42,27 @@ namespace RusRoadLib
         }
         private bool CheckHighway(string highway)
         {
-            bool res = false;
             int n;
-            if (int.TryParse(highway, out n))
-            {
-                using (RusRoadsData db = new RusRoadsData())
-                {
-                    var h = from c in db.Highway
-                            where c.Highway_Id == n
-                            select new { c.Highway_Id };
-                    if (h.Count() > 0)
-                    {
-                        res = true;
-                        
-                    }
-                }
-            }
-            return res;
+         // экономим одно обращение к БД для каждой записи проезда
+         // об отсутствии дороги в справочнике скажет исключение            
+
+            //bool res = false;
+            //if (int.TryParse(highway, out n))
+            //{
+            //    using (RusRoadsData db = new RusRoadsData())
+            //    {
+            //        var h = from c in db.Highway
+            //                where c.Highway_Id == n
+            //                select new { c.Highway_Id };
+            //        if (h.Count() > 0)
+            //        {
+            //            res = true;
+
+            //        }
+            //    }
+
+            //}
+            return int.TryParse(highway, out n) ? true : false;
         }
         private bool CheckTime(string time)
         {
