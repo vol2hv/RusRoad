@@ -27,15 +27,13 @@ namespace RusRoadLib
             bool res = false;
             using (RusRoadsData db = new RusRoadsData())
             {
-                var cars = from c in db.CarOwner
-                           where c.Govnumber == govnum
-                           select new { c.CarOwner_Id };
-                if (cars.Count() > 0)
+                var gn=db.CarOwner.FirstOrDefault(c => c.Govnumber == govnum);
+                if (gn != null)
                 {
                     res = true;
                     // не хорошо использовать глобальные переменные
                     // но дважды вычислять иx при проверке и заполнении еще хуже
-                    RusRoadSettings.CarOwner_Id = cars.ToList()[0].CarOwner_Id;
+                    RusRoadSettings.CarOwner_Id = gn.CarOwner_Id;
                 }
             }
             return res;
